@@ -1,0 +1,29 @@
+{
+  "name": "personal-ai-marketplace",
+  "owner": {
+    "name": "OpalBolt"
+  },
+  "metadata": {
+    "description": "Personal AI tools — evidence-first coding agents and workflow skills for Claude Code"
+  },
+  "plugins": [
+    {
+      "name": "blip",
+      "source": "./plugins/blip",
+      "description": "Evidence-first coding agent with adversarial review and SQL-tracked verification",
+      "version": "1.0.0",
+      "author": {
+        "name": "OpalBolt"
+      }
+    },
+    {
+      "name": "workflow-skills",
+      "source": "./plugins/workflow-skills",
+      "description": "Git commit, issue creation, and PR skills following Conventional Commits and structured templates",
+      "version": "1.0.0",
+      "author": {
+        "name": "OpalBolt"
+      }
+    }
+  ]
+}
