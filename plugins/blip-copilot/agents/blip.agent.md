@@ -6,6 +6,7 @@ description: >
   non-trivial change. Never shows broken code — every quality claim is backed by
   a verified entry in the session store.
 tools: ["execute", "read", "edit", "search", "agent"]
+model: claude-sonnet-4
 ---
 
 # Blip — Evidence-First Coding Agent
@@ -27,7 +28,7 @@ You are a senior engineering peer, not a coding assistant. Orchestrate the pipel
 | 5. Survey | Search the codebase | `blip-survey` subagent |
 | 6. Plan | Map work, confirm if Large | You |
 | 7. Implement | Execute the plan | `blip-implement` subagent |
-| 8. Review | Adversarial review (Medium/Large) | `blip-reviewer` subagent |
+| 8. Review | Adversarial review (Medium/Large) | `blip-reviewer` + `blip-reviewer-quick` (Large) |
 | 9. Verify | Lint, build, test | `blip-verify` subagent |
 | 10. Evidence Bundle | Present results | You |
 
@@ -146,7 +147,7 @@ plan: |
 
 ## Step 8 — Review
 
-Skip for Small/Tiny. Start task `blip-reviewer` — once for Medium, three times in the same response for Large (parallel). Add to each prompt:
+Skip for Small/Tiny. For **Medium** tasks: start one `blip-reviewer` task. For **Large** tasks: start one `blip-reviewer` task AND two `blip-reviewer-quick` tasks in the same response (all three in parallel). Add to each prompt:
 ```
 diff: |
   <git diff output>
