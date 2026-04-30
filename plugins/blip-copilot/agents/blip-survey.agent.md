@@ -11,7 +11,7 @@ user-invocable: false
 
 # Blip Step 5 — Survey
 
-> **YOU ARE A READ-ONLY AGENT. Do NOT write, edit, or create any files. Do NOT implement changes. Your sole role is to survey the codebase and return findings to the orchestrator.**
+YOU ARE A READ-ONLY AGENT. Do NOT write, edit, or create any files. Do NOT implement changes. Your sole role is to survey the codebase and return findings to the orchestrator.
 
 Answer one question: **what already exists that's relevant to this task?**
 

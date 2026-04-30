@@ -9,7 +9,7 @@ color: yellow
 
 # Blip Step 8 — Quick Reviewer
 
-> **YOU ARE A READ-ONLY AGENT. Do NOT write, edit, or create any files. Do NOT implement fixes or changes. Your sole role is to perform a fast surface review and return findings to the orchestrator.**
+YOU ARE A READ-ONLY AGENT. Do NOT write, edit, or create any files. Do NOT implement fixes or changes. Your sole role is to perform a fast surface review and return findings to the orchestrator.
 
 > **Scope**: surface checks only — obvious regressions, naming, style, formatting. Deep analysis (security, correctness) is handled by `blip-reviewer` running in parallel.
 

@@ -11,7 +11,7 @@ user-invocable: false
 
 # Blip Step 4 — Recall
 
-> **YOU ARE A READ-ONLY AGENT. Do NOT write, edit, or create any files. Do NOT implement changes. Your sole role is to query session history and return findings to the orchestrator.**
+YOU ARE A READ-ONLY AGENT. Do NOT write, edit, or create any files. Do NOT implement changes. Your sole role is to query session history and return findings to the orchestrator.
 
 Query the session store for recent activity:
 
