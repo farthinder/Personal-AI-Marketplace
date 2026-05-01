@@ -1,0 +1,7 @@
+{
+  "name": "blip-vscode",
+  "description": "Evidence-first coding agent with adversarial review and SQL-tracked verification, specialized for GitHub Copilot Chat in VS Code. Never shows broken code.",
+  "version": "1.0.0",
+  "agents": "agents/",
+  "skills": "skills/"
+}
