@@ -23,6 +23,50 @@ Blip runs as an orchestrated 10-step pipeline. The main agent (`blip`) handles s
 
 Steps 3 and 4 run in parallel. Step 8 is skipped for Small/Tiny tasks.
 
+## Installation
+
+### Option A: Global (available in all workspaces)
+
+Install into the global Copilot agents directory. Blip will be available in every project you open.
+
+```bash
+mkdir -p ~/.copilot/agents ~/.copilot/skills
+
+# Copy (snapshot — re-run to pick up updates)
+cp /path/to/Personal-AI-Marketplace/plugins/blip-copilot/agents/*.agent.md ~/.copilot/agents/
+cp -r /path/to/Personal-AI-Marketplace/plugins/workflow-skills/skills/* ~/.copilot/skills/
+
+# Or symlink (live — changes in the repo are reflected immediately)
+MARKETPLACE=/path/to/Personal-AI-Marketplace
+for f in "$MARKETPLACE/plugins/blip-copilot/agents"/*.agent.md; do
+  ln -sf "$f" ~/.copilot/agents/
+done
+for skill in git-commit issue pr; do
+  ln -sf "$MARKETPLACE/plugins/workflow-skills/skills/$skill" ~/.copilot/skills/$skill
+done
+```
+
+### Option B: Per-project (workspace-local)
+
+Install into a single project's `.github/` directory. Agents are scoped to that workspace only.
+
+```bash
+# From your project root
+mkdir -p .github/agents
+cp -r /path/to/Personal-AI-Marketplace/plugins/blip-copilot/agents/ .github/agents/
+
+# Or symlink for automatic updates
+ln -s /path/to/Personal-AI-Marketplace/plugins/blip-copilot/agents .github/agents
+```
+
+### Discovery
+
+Copilot Chat auto-discovers `.agent.md` files from both locations:
+- **Global**: `~/.copilot/agents/` — available in all workspaces
+- **Workspace**: `.github/agents/` in the project root — available only in that project
+
+The session store (`.blip/session.db`) is always created in the **workspace root** regardless of where Blip is installed, keeping session data project-local.
+
 ## Usage
 
 ```bash
