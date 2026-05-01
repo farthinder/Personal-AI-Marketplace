@@ -1,5 +1,5 @@
 ---
-name: issue
+name: blip-issue
 description: >
   Expand a rough idea into a well-structured, actionable issue — then create it in the right
   tracker (GitHub, Linear, Jira). Use this skill whenever a user wants to create an issue,

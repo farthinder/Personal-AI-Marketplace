@@ -40,9 +40,9 @@ cp -r plugins/blip-vscode/skills/* ~/.copilot/skills/
 for f in plugins/blip-vscode/agents/*.agent.md; do
   ln -sf "$(pwd)/$f" ~/.copilot/agents/
 done
-ln -sf "$(pwd)/plugins/blip-vscode/skills/git-commit" ~/.copilot/skills/git-commit
-ln -sf "$(pwd)/plugins/blip-vscode/skills/issue" ~/.copilot/skills/issue
-ln -sf "$(pwd)/plugins/blip-vscode/skills/pr" ~/.copilot/skills/pr
+ln -sf "$(pwd)/plugins/blip-vscode/skills/blip-git-commit" ~/.copilot/skills/blip-git-commit
+ln -sf "$(pwd)/plugins/blip-vscode/skills/blip-issue" ~/.copilot/skills/blip-issue
+ln -sf "$(pwd)/plugins/blip-vscode/skills/blip-pr" ~/.copilot/skills/blip-pr
 ```
 
 ### Option B: Per-project (workspace-local)
@@ -99,9 +99,9 @@ Tiny tasks skip the subagent pipeline entirely.
 
 ## Included skills
 
-- **git-commit** — Conventional Commits with issue references and "why" explanations
-- **issue** — Turn rough ideas into well-structured, actionable issues
-- **pr** — Create pull requests with full reviewer context
+- **blip-git-commit** — Conventional Commits with issue references and "why" explanations
+- **blip-issue** — Turn rough ideas into well-structured, actionable issues
+- **blip-pr** — Create pull requests with full reviewer context
 
 ## VS Code-specific adaptations
 

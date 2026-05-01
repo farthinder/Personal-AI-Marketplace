@@ -1,5 +1,5 @@
 ---
-name: pr
+name: blip-pr
 description: >
   Create a well-structured GitHub pull request that gives the reviewer full context: what
   issue is being addressed, what problem it solves, what changed, why, and how to verify.

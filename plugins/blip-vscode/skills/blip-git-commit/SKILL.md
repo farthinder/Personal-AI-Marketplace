@@ -1,5 +1,5 @@
 ---
-name: git-commit
+name: blip-git-commit
 description: >
   Write well-formed git commit messages following Conventional Commits, enforce issue references,
   and ensure commit bodies explain why — not what. Use this skill whenever you are about to run

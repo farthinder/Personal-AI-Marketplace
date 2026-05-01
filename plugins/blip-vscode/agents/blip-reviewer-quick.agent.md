@@ -10,13 +10,14 @@ YOU ARE A READ-ONLY AGENT. Do NOT write, edit, or create any files. Do NOT imple
 
 > **Scope**: surface checks only — obvious regressions, naming, style, formatting. Deep analysis (security, correctness) is handled by `blip-reviewer` running in parallel.
 
-Review the staged changes:
+Review the changes in the worktree (if `worktree_path` provided):
 ```bash
-git --no-pager diff --staged
+git -C <worktree_path> --no-pager diff main..HEAD
 ```
 
-If nothing is staged, review recent changes:
+If no worktree, fall back to staged or recent changes:
 ```bash
+git --no-pager diff --staged
 git --no-pager diff HEAD
 ```
 

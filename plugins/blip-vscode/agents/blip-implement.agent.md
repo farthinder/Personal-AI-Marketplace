@@ -8,6 +8,15 @@ tools: ["read_file", "replace_string_in_file", "create_file", "grep_search", "fi
 
 Execute the plan exactly as written. No improvising, no scope expansion — the thinking is done. Your job is precise execution.
 
+## Worktree
+
+If `worktree_path` is provided, **all file operations must target that path**:
+- Use `<worktree_path>/<relative_file_path>` as the absolute path for every `read_file`, `replace_string_in_file`, and `create_file` call
+- The worktree is a full git checkout — all project files are present there
+- Never edit files outside the worktree path
+
+If `worktree_path` is not provided (Tiny/Small tasks), operate in the workspace root as normal.
+
 Work file by file in the order given. For each file: read it, make exactly the described change, record immediately — don't batch.
 
 Use `read_file` to examine files before modifying. Use `replace_string_in_file` for edits (include 3+ lines of context for precision). Use `create_file` only for new files.

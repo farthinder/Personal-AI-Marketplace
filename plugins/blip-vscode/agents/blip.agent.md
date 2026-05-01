@@ -167,6 +167,25 @@ Risk levels:
 
 ---
 
+## Step 6b — Worktree Setup (Medium/Large tasks only)
+
+After the plan is confirmed, isolate the work in a git worktree. This keeps the main working tree clean and makes the change trivially reversible:
+
+```bash
+REPO_ROOT=$(git rev-parse --show-toplevel)
+WORKTREE_PATH="$REPO_ROOT/.blip/worktrees/<task_id>"
+git worktree add "$WORKTREE_PATH" -b "blip/<task_id>"
+```
+
+Record it:
+```bash
+sqlite3 .blip/session.db "INSERT INTO verifications (task_id, step, status, evidence) VALUES ('<task_id>', 'worktree-setup', 'pass', '$WORKTREE_PATH');"
+```
+
+Pass `worktree_path: <WORKTREE_PATH>` in all subsequent subagent prompts (Steps 7, 8, 9).
+
+---
+
 ## Step 7 — Implement (subagent)
 
 ```
@@ -175,6 +194,7 @@ prompt: |
   task_id: <task_id>
   db_path: .blip/session.db
   original_request: <user's request>
+  worktree_path: <WORKTREE_PATH>   # omit for Tiny/Small
   plan:
     <paste the plan table>
 ```
@@ -192,13 +212,14 @@ prompt: |
   task_id: <task_id>
   db_path: .blip/session.db
   original_request: <user's request>
+  worktree_path: <WORKTREE_PATH>
   files_changed: <list from Step 7>
 ```
 
 **Large OR 🔴 files**: run both reviewers:
 ```
-runSubagent: blip-reviewer (deep analysis)
-runSubagent: blip-reviewer-quick (surface check)
+runSubagent: blip-reviewer (deep analysis)    # include worktree_path
+runSubagent: blip-reviewer-quick (surface check)  # include worktree_path
 ```
 
 If BLOCKERs found: fix the issue (re-run Step 7 for the affected file), then re-review once. Max 2 review rounds.
@@ -213,11 +234,16 @@ prompt: |
   task_id: <task_id>
   db_path: .blip/session.db
   original_request: <user's request>
+  worktree_path: <WORKTREE_PATH>   # omit for Tiny/Small
   files_changed: <list from Step 7>
   task_size: <size>
 ```
 
-If verification fails: attempt fix once. If it fails again, revert via `git checkout HEAD -- <files>` and explain.
+If verification fails: attempt fix once (re-run blip-implement with the fix). If it fails again, discard the worktree:
+```bash
+git worktree remove --force .blip/worktrees/<task_id>
+git branch -D blip/<task_id>
+```
 
 ---
 
@@ -248,10 +274,18 @@ Present:
 - file — what changed
 
 **Confidence**: High / Medium / Low
-**Rollback**: `git checkout HEAD -- <files>`
+**Worktree**: `blip/<task_id>` at `.blip/worktrees/<task_id>`
 ```
 
 **Confidence levels:**
 - **High**: All checks passed, no review blockers, clear blast radius.
 - **Medium**: Checks passed but no test coverage for the path, or a reviewer concern addressed but uncertain.
 - **Low**: A check failed, assumptions unverifiable, or a reviewer blocker remains. State what would raise it.
+
+After presenting, offer resolution (Medium/Large only):
+
+| Option | Command |
+|--------|---------|
+| **Merge to current branch** | `git merge --ff-only blip/<task_id> && git worktree remove .blip/worktrees/<task_id> && git branch -d blip/<task_id>` |
+| **Create PR** | `gh pr create --head blip/<task_id>` then `git worktree remove .blip/worktrees/<task_id>` |
+| **Discard** | `git worktree remove --force .blip/worktrees/<task_id> && git branch -D blip/<task_id>` |
