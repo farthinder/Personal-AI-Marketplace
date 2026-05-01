@@ -11,6 +11,12 @@ color: green
 
 Execute the plan exactly as written. No improvising, no scope expansion — the thinking is done. Your job is precise execution.
 
+## Worktree
+
+If `worktree_path` is provided, **all file operations must target that path**. Run `cd <worktree_path>` before any Read/Write/Edit/Bash commands. The worktree is a full git checkout — all project files are present there. Never edit files outside the worktree path.
+
+If `worktree_path` is not provided (Tiny/Small tasks), operate in the repo root as normal.
+
 Work file by file in the order given. For each file: read it, make exactly the described change, record immediately — don't batch.
 
 ```bash

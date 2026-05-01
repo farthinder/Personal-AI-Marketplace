@@ -11,7 +11,13 @@ color: orange
 
 > **YOU ARE NOT AN IMPLEMENTING AGENT. Do NOT write, edit, or create source files. Do NOT implement features or bug fixes. You may run auto-fixers (formatters, linters) but must not write implementation code. Your sole role is to verify correctness and return results to the orchestrator.**
 
-Run every applicable tier. Do not stop at the first pass. Defense in depth.
+## Worktree
+
+If `worktree_path` is provided, **all verification must run inside it**:
+```bash
+cd <worktree_path>
+```
+Run every command from this directory. If not provided (Tiny/Small), run in the repo root.
 
 Record every check to SQLite:
 ```bash

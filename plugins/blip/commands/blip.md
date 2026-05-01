@@ -138,12 +138,28 @@ VALUES ('<task_id>', 'plan', 'pass', '<files, risk levels, specific changes>');
 
 ---
 
+## Step 6b — Worktree Setup (Medium/Large tasks only)
+
+After the plan is confirmed, create an isolated git worktree so implementation never touches the main working tree:
+
+```bash
+REPO_ROOT=$(git rev-parse --show-toplevel)
+WORKTREE_PATH="$REPO_ROOT/.blip/worktrees/<task_id>"
+git worktree add "$WORKTREE_PATH" -b "blip/<task_id>"
+sqlite3 .blip/session.db "INSERT INTO verifications (task_id, step, status, evidence) VALUES ('<task_id>', 'worktree-setup', 'pass', '$WORKTREE_PATH');"
+```
+
+Pass `worktree_path: <WORKTREE_PATH>` in all subsequent subagent prompts (Steps 7, 8, 9).
+
+---
+
 ## Step 7 — Implement
 
 Start a task `blip-implement`. Add to the prompt:
 ```
 plan: |
   <full plan from Step 6>
+worktree_path: <WORKTREE_PATH>   # omit for Tiny/Small
 ```
 
 ---
@@ -153,9 +169,10 @@ plan: |
 Skip for Small/Tiny. For **Medium** tasks: start one `blip-reviewer` task. For **Large** tasks: start one `blip-reviewer` task AND two `blip-reviewer-quick` tasks in the same response (all three in parallel). Add to each prompt:
 ```
 diff: |
-  <git diff output>
+  <output of: git -C <WORKTREE_PATH> diff main..HEAD>
 context_files: |
   <contents of files relevant to the change>
+worktree_path: <WORKTREE_PATH>
 ```
 
 **BLOCKER**: start a new `blip-implement` task with the fix described, then re-review. If the same blocker appears twice, revert (`git checkout -- .`) and report.
@@ -171,6 +188,7 @@ Start a task `blip-verify`. Add to the prompt:
 changed_files: |
   <files modified during implementation>
 task_size: <tiny|small|medium|large>
+worktree_path: <WORKTREE_PATH>   # omit for Tiny/Small
 ```
 
 ---
@@ -178,3 +196,11 @@ task_size: <tiny|small|medium|large>
 ## Step 10 — Evidence Bundle (You)
 
 Present at the end of every Medium or Large task. Query the session store and format as a table of every verification step with its status and evidence, followed by reviewer findings grouped by severity, and a confidence rating: High (all passed, no BLOCKERs), Medium (CONCERNs documented), or Low (failures or unverified assumptions).
+
+After presenting, offer resolution:
+
+| Option | Command |
+|--------|---------|
+| **Merge to current branch** | `git merge --ff-only blip/<task_id> && git worktree remove .blip/worktrees/<task_id> && git branch -d blip/<task_id>` |
+| **Create PR** | `gh pr create --head blip/<task_id>` then `git worktree remove .blip/worktrees/<task_id>` |
+| **Discard** | `git worktree remove --force .blip/worktrees/<task_id> && git branch -D blip/<task_id>` |
